@@ -8,6 +8,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 from reportlab.platypus import Paragraph, PageBreak
 from reportlab.pdfbase import pdfmetrics      
 from reportlab.pdfbase.ttfonts import TTFont   
+from reportlab.lib import pdfencrypt
 from reportlab.lib.fonts import addMapping
 
 def init():
@@ -37,22 +38,21 @@ def init():
 
     blank = Paragraph("", style["ParagraphLabel"])
 
-def init_CSV(data):
+def init_CSV(data,data_monthly):
     global doc, elements, sample_style_sheet, style, blank
 
     print("Creating Payslip for User: " + data['Employee_Name'])
 
-    doc = SimpleDocTemplate(data['Employee_Name']+".pdf", pagesize=letter, encoding="UTF-8", topMargin=15, bottomMargin=32,)
-
+    doc = SimpleDocTemplate(data['Employee_Code'] + "_" + data['Employee_Name'] + "_" + data_monthly['Monthly_code']+".pdf", encrypt=pdfencrypt.StandardEncryption( data['Employee_Pass'], canPrint=0), pagesize=letter, encoding="UTF-8", topMargin=15, bottomMargin=32,)
 
     elements = []
     sample_style_sheet = getSampleStyleSheet()
 
     # Register Font for Unicode-utf8
-    pdfmetrics.registerFont(TTFont('arial', 'arial.ttf')) 
+    pdfmetrics.registerFont(TTFont('arial', 'arial.ttf')) # devaNagri is a folder located in **/usr/share/fonts/truetype** and 'NotoSerifDevanagari.ttf' file you just download it from https://www.google.com/get/noto/#sans-deva and move to devaNagri folder.
     pdfmetrics.registerFont(TTFont('arialbd', 'arialbd.ttf'))
 
-    addMapping('arial', 0, 0, 'arial') 
+    addMapping('arial', 0, 0, 'arial') #devnagri is a folder name and NotoSerifDevanagari is file name 
     addMapping('arialbd', 0, 0, 'arialbd')
 
     style = getSampleStyleSheet()   
@@ -87,10 +87,10 @@ def create_Title():
     paragraphTitle = Paragraph('PAYSLIP', style["ParagraphTitle"])
     paragraphLabel = Paragraph("PHIẾU LƯƠNG", style["ParagraphLabel"])
 
-    # Setup logo image
-    I = Image('sparx.png')
+    # image
+    I = Image('logo_sparx.png')
     I.drawHeight = 1.25*50*I.drawHeight / I.drawWidth
-    I.drawWidth = 50
+    I.drawWidth = 70
 
     table1_data= [[I, paragraphTitle,''],
                   ['', paragraphLabel,'']]
@@ -98,7 +98,12 @@ def create_Title():
     table1_style = [('ALIGN',(0,0),(0,1),'LEFT'),('ALIGN',(1,0),(1,1),'CENTER'),('SPAN', (0,0), (0,1))]
     table1.setStyle(TableStyle(table1_style))
     elements.append(table1)
-    elements.append(blank) 
+    elements.append(blank)
+
+    # elements.append()
+    # elements.append(paragraphTitle)
+    # elements.append(paragraphLabel)
+    # elements.append(blank)
 
 def create_Table1():
     # Part 2
@@ -133,16 +138,16 @@ def create_Table1():
     table1.setStyle(TableStyle(table1_style))
     elements.append(table1)
 
-def create_Table1_CSV(data):
+def create_Table1_CSV(data,data_monthly):
     # Part 2
     
     blank = Paragraph("", style["ParagraphLabel"])
     P200_1 = Paragraph("Payment for", style["ParagraphNormal"])
     P200_2 = Paragraph("Kỳ tính lương tháng", style["ParagraphNormal"])
-    P210_1 = Paragraph(data['Payment_for'], style["ParagraphBigBoldRight"])
+    P210_1 = Paragraph(data_monthly['Payment_for'], style["ParagraphBigBoldRight"])
     P202_1 = Paragraph("Exchange rate", style["ParagraphNormal"])
     P202_2 = Paragraph("Tỉ giá", style["ParagraphNormal"])
-    P212_1 = Paragraph(data['Exchange_rate'], style["ParagraphNormalRight"])
+    P212_1 = Paragraph(data_monthly['Exchange_rate'], style["ParagraphNormalRight"])
     P222_1 = Paragraph("VND/USD (Vietcombank exchange rate by 25th of the month)", style["ParagraphNormal"])
     P222_2 = Paragraph("VND/USD (tỉ giá ngân hàng Vietcombank vào ngày 25 hằng tháng)", style["ParagraphNormal"])
     
@@ -150,10 +155,8 @@ def create_Table1_CSV(data):
     table1_data= [[[P200_1,P200_2], P210_1,'',''],
                   ['', '','',''],
                   [[P202_1,P202_2], P212_1,[P222_1,P222_2],''],
-                  ['', '','','']]
-    
+                  ['', '','',''],]
     table1=Table(table1_data, [147,147,147,147],7)
-
     table1_style = [('FONTSIZE', (0,0), (-1,-1), 4),
                     ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                     ('INNERGRID', (1,0), (2,3), 0.25, colors.black),
@@ -163,8 +166,8 @@ def create_Table1_CSV(data):
                     ('SPAN', (1,2), (1,3)),('SPAN', (2,2), (3,3)),
                     ('ALIGN',(1,0),(1,1),'RIGHT'),
                     ('ALIGN',(1,2),(1,3),'RIGHT'),
-                    ('LINEABOVE',(0,2),(3,2),1,colors.gray)]
-    
+                    ('LINEABOVE',(0,2),(3,2),1,colors.gray),
+                    ]
     table1.setStyle(TableStyle(table1_style))
     elements.append(table1)
 
@@ -266,7 +269,6 @@ def create_DoubleTables():
 def create_DoubleTables_CSV(data):
     # Part 3
     # Col 1, format(P3_Row_Col_Number [1: Left, 2: Right])
-
     P300_1 = Paragraph("Employee Code", style["ParagraphHeaderBoldLeft"])
     P300_2 = Paragraph("Mã số nhân viên", style["ParagraphHeaderBoldLeft"])
     P310_1 = Paragraph("Employee Name", style["ParagraphHeaderBoldLeft"])
@@ -298,7 +300,7 @@ def create_DoubleTables_CSV(data):
     P371_1 = Paragraph(data['Number_of_dependents'], style["ParagraphNormalCenter"])
 
 
-    # Col 1, table2
+    # Col 3
     P300_3 = Paragraph("ACTUAL WORKING DAY", style["ParagraphHeaderBoldLeft"])
     P300_4 = Paragraph("Ngày công trong tháng", style["ParagraphHeaderBoldLeft"])
     P310_3 = Paragraph("Standard working days in month", style["ParagraphNormal"])
@@ -316,7 +318,7 @@ def create_DoubleTables_CSV(data):
     P370_3 = Paragraph("Overtime Hours on Holidays", style["ParagraphNormal"])
     P370_4 = Paragraph("Số giờ tăng ca ngày lễ", style["ParagraphNormal"])
 
-    # Col 2, format(P3_Row_Col_Number [1: Left, 2: Right]) table 2
+    # Col 4, format(P3_Row_Col_Number [1: Left, 2: Right])
     
     P301_4 = Paragraph('DAYS', style["ParagraphHeaderBoldCenter"])
     P311_4 = Paragraph(data['working_days'], style["ParagraphNormalRight"])
@@ -326,7 +328,6 @@ def create_DoubleTables_CSV(data):
     P351_4 = Paragraph(data['OT_on_Weekdays'], style["ParagraphNormalRight"])
     P361_4 = Paragraph(data['OT_on_Weekend'], style["ParagraphNormalRight"])
     P371_4 = Paragraph(data['OT_on_Holidays'], style["ParagraphNormalRight"])
-
     # Col 4
 
     part3_data1= [[[P300_1,P300_2], '', '', P301_1, ''],
@@ -346,9 +347,7 @@ def create_DoubleTables_CSV(data):
                   [[P350_3,P350_4], P351_4],
                   [[P360_3,P360_4], P361_4],
                   [[P370_3,P370_4], P371_4]]
-    
     # Size Table, Alignment
-
     part3_t1=Table(part3_data1,[58,58,58,58,58], 14,hAlign='LEFT')
 
     part3_t1.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
@@ -367,6 +366,8 @@ def create_DoubleTables_CSV(data):
                    ('ALIGN',(3,4),(4,7),'RIGHT'),
                    ('FONTSIZE', (0,0), (-1,-1), 4),
                    ]))
+   
+
    
     part3_t2=Table(part3_data2,[145,145], 14,hAlign='RIGHT')
     
@@ -409,8 +410,8 @@ def create_CurrencyTable():
     P414_1 = Paragraph("Quarterly Bonus", style["Paragraph4Normal"])
     P414_2 = Paragraph("Tiền thưởng quý", style["Paragraph4Normal"])
 
-    P415_1 = Paragraph("2023 Annual Bonus", style["Paragraph4Normal"])
-    P415_2 = Paragraph("Tiền thưởng năm 2023", style["Paragraph4Normal"])
+    P415_1 = Paragraph("Annual Bonus", style["Paragraph4Normal"])
+    P415_2 = Paragraph("Tiền thưởng năm", style["Paragraph4Normal"])
     P416_1 = Paragraph("Referral Bonus", style["Paragraph4Normal"])
     P416_2 = Paragraph("Tiền thưởng giới thiệu ứng viên", style["Paragraph4Normal"])
     P417_1 = Paragraph("Other Bonus", style["Paragraph4Normal"])
@@ -444,12 +445,12 @@ def create_CurrencyTable():
 
 
 
-    P441_1 = Paragraph("Mandatory insurance deduction (9.5%)", style["Paragraph4Normal"])
-    P441_2 = Paragraph("BHXH, BHYT, BHTN (9.5%)", style["Paragraph4Normal"])
+    P441_1 = Paragraph("Mandatory insurance deduction", style["Paragraph4Normal"])
+    P441_2 = Paragraph("BHXH, BHYT, BHTN", style["Paragraph4Normal"])
     P442_1 = Paragraph("Personal income tax (PIT)", style["Paragraph4Normal"])
     P442_2 = Paragraph("Thuế thu nhập cá nhân", style["Paragraph4Normal"])
-    P443_1 = Paragraph("2022 Finalised PIT", style["Paragraph4Normal"])
-    P443_2 = Paragraph("Quyết toán thuế 2022", style["Paragraph4Normal"])
+    P443_1 = Paragraph("Finalised PIT", style["Paragraph4Normal"])
+    P443_2 = Paragraph("Quyết toán thuế", style["Paragraph4Normal"])
     P444_1 = Paragraph("Union fee", style["Paragraph4Normal"])
     P444_2 = Paragraph("Công đoàn phí", style["Paragraph4Normal"])
 
@@ -531,8 +532,8 @@ def create_CurrencyTable_CSV(data):
     P414_1 = Paragraph("Quarterly Bonus", style["Paragraph4Normal"])
     P414_2 = Paragraph("Tiền thưởng quý", style["Paragraph4Normal"])
 
-    P415_1 = Paragraph("2023 Annual Bonus", style["Paragraph4Normal"])
-    P415_2 = Paragraph("Tiền thưởng năm 2023", style["Paragraph4Normal"])
+    P415_1 = Paragraph("Annual Bonus", style["Paragraph4Normal"])
+    P415_2 = Paragraph("Tiền thưởng năm", style["Paragraph4Normal"])
     P416_1 = Paragraph("Referral Bonus", style["Paragraph4Normal"])
     P416_2 = Paragraph("Tiền thưởng giới thiệu ứng viên", style["Paragraph4Normal"])
     P417_1 = Paragraph("Other Bonus", style["Paragraph4Normal"])
@@ -563,12 +564,12 @@ def create_CurrencyTable_CSV(data):
     P4120_3 = Paragraph("[27] = [25]-[26]", style["ParagraphHeaderCenter"])
 
 
-    P441_1 = Paragraph("Mandatory insurance deduction (9.5%)", style["Paragraph4Normal"])
-    P441_2 = Paragraph("BHXH, BHYT, BHTN (9.5%)", style["Paragraph4Normal"])
+    P441_1 = Paragraph("Mandatory insurance deduction", style["Paragraph4Normal"])
+    P441_2 = Paragraph("BHXH, BHYT, BHTN", style["Paragraph4Normal"])
     P442_1 = Paragraph("Personal income tax (PIT)", style["Paragraph4Normal"])
     P442_2 = Paragraph("Thuế thu nhập cá nhân", style["Paragraph4Normal"])
-    P443_1 = Paragraph("2022 Finalised PIT", style["Paragraph4Normal"])
-    P443_2 = Paragraph("Quyết toán thuế 2022", style["Paragraph4Normal"])
+    P443_1 = Paragraph("Finalised PIT", style["Paragraph4Normal"])
+    P443_2 = Paragraph("Quyết toán thuế", style["Paragraph4Normal"])
     P444_1 = Paragraph("Union fee", style["Paragraph4Normal"])
     P444_2 = Paragraph("Công đoàn phí", style["Paragraph4Normal"])
 
@@ -653,7 +654,7 @@ def writeToDisk():
     doc.build(elements)
 
 def inputCSV():
-    global data_list
+    global data_list, data_monthly
  
     # Open the CSV file for reading
     with open('payslips.csv', mode='r') as file:
@@ -667,14 +668,29 @@ def inputCSV():
         for row in csv_reader:
             # Append each row (as a dictionary) to the list
             data_list.append(row)
+    
+    # Read file data monthly
+    with open('monthly.csv', mode='r') as file:
+    # Create a CSV reader with DictReader 
+        csv_reader = csv.DictReader(file)
+ 
+        # Initialize an empty list to store the dictionaries
+        data_monthly = []
+    
+        # Iterate through each row in the CSV file
+        for row in csv_reader:
+            # Append each row (as a dictionary) to the list
+            data_monthly.append(row)
+    
+    # Print the list of dictionaries
 
 def main():
 
     inputCSV()
     for data in data_list:
-        init_CSV(data)
+        init_CSV(data,data_monthly[0])
         create_Title()
-        create_Table1_CSV(data)
+        create_Table1_CSV(data,data_monthly[0])
         create_DoubleTables_CSV(data)
         create_CurrencyTable_CSV(data)
         writeToDisk()
