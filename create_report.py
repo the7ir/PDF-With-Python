@@ -4,7 +4,7 @@ from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.pagesizes import letter, inch, landscape
 from reportlab.lib.styles import getSampleStyleSheet,ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_RIGHT, TA_JUSTIFY, TA_LEFT
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image
 from reportlab.platypus import Paragraph, PageBreak
 from reportlab.pdfbase import pdfmetrics      
 from reportlab.pdfbase.ttfonts import TTFont   
@@ -20,16 +20,20 @@ def init():
 
     # Register Font for Unicode-utf8
     pdfmetrics.registerFont(TTFont('arial', 'arial.ttf')) # devaNagri is a folder located in **/usr/share/fonts/truetype** and 'NotoSerifDevanagari.ttf' file you just download it from https://www.google.com/get/noto/#sans-deva and move to devaNagri folder.
+    pdfmetrics.registerFont(TTFont('arialbd', 'arialbd.ttf'))
+
 
     addMapping('arial', 0, 0, 'arial') #devnagri is a folder name and NotoSerifDevanagari is file name 
+    addMapping('arialbd', 0, 0, 'arialbd')
+    
 
     style = getSampleStyleSheet()   
-    style.add(ParagraphStyle(name="ParagraphTitle", alignment=TA_CENTER, fontName="arial",parent=style['Heading3'], textColor=colors.red)) # after mapping fontName define your folder name.   
+    style.add(ParagraphStyle(name="ParagraphTitle", alignment=TA_CENTER, fontName="arial",parent=style['Heading3'], textColor=colors.red, fontSize=8)) # after mapping fontName define your folder name.   
     style.add(ParagraphStyle(name="ParagraphLabel", alignment=TA_CENTER, fontName="arial",parent=style['BodyText'], textColor=colors.black))
-    style.add(ParagraphStyle(name="ParagraphNormal", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=7))
-    style.add(ParagraphStyle(name="ParagraphNormalRight", alignment=TA_RIGHT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=7))
-    style.add(ParagraphStyle(name="ParagraphNormalCenter", alignment=TA_CENTER, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=7))
-    style.add(ParagraphStyle(name="Paragraph4Normal", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=5))
+    style.add(ParagraphStyle(name="ParagraphNormal", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4))
+    style.add(ParagraphStyle(name="ParagraphNormalRight", alignment=TA_RIGHT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4))
+    style.add(ParagraphStyle(name="ParagraphNormalCenter", alignment=TA_CENTER, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4))
+    style.add(ParagraphStyle(name="Paragraph4Normal", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4))
 
     blank = Paragraph("", style["ParagraphLabel"])
 
@@ -40,22 +44,41 @@ def init_CSV(data):
 
     doc = SimpleDocTemplate(data['Employee_Name']+".pdf", pagesize=letter, encoding="UTF-8", topMargin=15, bottomMargin=32,)
 
+
     elements = []
     sample_style_sheet = getSampleStyleSheet()
 
     # Register Font for Unicode-utf8
-    pdfmetrics.registerFont(TTFont('arial', 'arial.ttf')) # devaNagri is a folder located in **/usr/share/fonts/truetype** and 'NotoSerifDevanagari.ttf' file you just download it from https://www.google.com/get/noto/#sans-deva and move to devaNagri folder.
+    pdfmetrics.registerFont(TTFont('arial', 'arial.ttf')) 
+    pdfmetrics.registerFont(TTFont('arialbd', 'arialbd.ttf'))
 
-    addMapping('arial', 0, 0, 'arial') #devnagri is a folder name and NotoSerifDevanagari is file name 
+    addMapping('arial', 0, 0, 'arial') 
+    addMapping('arialbd', 0, 0, 'arialbd')
 
     style = getSampleStyleSheet()   
-    style.add(ParagraphStyle(name="ParagraphTitle", alignment=TA_CENTER, fontName="arial",parent=style['Heading3'], textColor=colors.red)) # after mapping fontName define your folder name.   
-    style.add(ParagraphStyle(name="ParagraphLabel", alignment=TA_CENTER, fontName="arial",parent=style['BodyText'], textColor=colors.black))
-    style.add(ParagraphStyle(name="ParagraphNormal", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=7))
-    style.add(ParagraphStyle(name="ParagraphNormalRight", alignment=TA_RIGHT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=7))
-    style.add(ParagraphStyle(name="ParagraphNormalCenter", alignment=TA_CENTER, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=7))
-    style.add(ParagraphStyle(name="Paragraph4Normal", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=5))
-    style.add(ParagraphStyle(name="ParagraphNormal9", alignment=TA_CENTER, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=9))
+    style.add(ParagraphStyle(name="ParagraphTitle", alignment=TA_CENTER, fontName="arialbd",parent=style['Heading3'], textColor=colors.red,spaceAfter=0,spaceBefore=0,leading=9)) # after mapping fontName define your folder name.   
+    style.add(ParagraphStyle(name="ParagraphLabel", alignment=TA_CENTER, fontName="arial",parent=style['BodyText']))
+    style.add(ParagraphStyle(name="ParagraphNormal", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphNormalRight", alignment=TA_RIGHT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphNormalLeft", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphNormalCenter", alignment=TA_CENTER, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    
+    style.add(ParagraphStyle(name="ParagraphHeaderRight", alignment=TA_RIGHT, fontName="arial",parent=style['Normal'], textColor=colors.white, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphHeaderLeft", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.white, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphHeaderCenter", alignment=TA_CENTER, fontName="arial",parent=style['Normal'], textColor=colors.white, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+
+    style.add(ParagraphStyle(name="ParagraphHeaderBigRight", alignment=TA_RIGHT, fontName="arialbd",parent=style['Heading3'], textColor=colors.white, fontSize=5,spaceAfter=0,spaceBefore=0,leading=7))
+    style.add(ParagraphStyle(name="ParagraphHeaderBigLeft", alignment=TA_LEFT, fontName="arialbd",parent=style['Heading3'], textColor=colors.white, fontSize=5,spaceAfter=0,spaceBefore=0,leading=7))
+    style.add(ParagraphStyle(name="ParagraphHeaderBigCenter", alignment=TA_CENTER, fontName="arialbd",parent=style['Heading3'], textColor=colors.white, fontSize=5,spaceAfter=0,spaceBefore=0,leading=7))
+
+    style.add(ParagraphStyle(name="ParagraphHeaderBoldRight", alignment=TA_RIGHT, fontName="arialbd",parent=style['Normal'], textColor=colors.white, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphHeaderBoldLeft", alignment=TA_LEFT, fontName="arialbd",parent=style['Normal'], textColor=colors.white, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphHeaderBoldCenter", alignment=TA_CENTER, fontName="arialbd",parent=style['Normal'], textColor=colors.white, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphBigBoldRight", alignment=TA_RIGHT, fontName="arialbd",parent=style['Normal'], textColor=colors.black, fontSize=7,spaceAfter=0,spaceBefore=0,leading=8))
+    style.add(ParagraphStyle(name="ParagraphBoldCenter", alignment=TA_CENTER, fontName="arialbd",parent=style['Normal'], textColor=colors.black, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    
+    style.add(ParagraphStyle(name="Paragraph4Normal", alignment=TA_LEFT, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
+    style.add(ParagraphStyle(name="ParagraphNormal9", alignment=TA_CENTER, fontName="arial",parent=style['Normal'], textColor=colors.black, fontSize=4,spaceAfter=0,spaceBefore=0,leading=5))
 
     blank = Paragraph("", style["ParagraphLabel"])
 
@@ -64,9 +87,18 @@ def create_Title():
     paragraphTitle = Paragraph('PAYSLIP', style["ParagraphTitle"])
     paragraphLabel = Paragraph("PHIẾU LƯƠNG", style["ParagraphLabel"])
 
-    elements.append(paragraphTitle)
-    elements.append(paragraphLabel)
-    elements.append(blank)
+    # Setup logo image
+    I = Image('sparx.png')
+    I.drawHeight = 1.25*50*I.drawHeight / I.drawWidth
+    I.drawWidth = 50
+
+    table1_data= [[I, paragraphTitle,''],
+                  ['', paragraphLabel,'']]
+    table1=Table(table1_data, [199,199,199])
+    table1_style = [('ALIGN',(0,0),(0,1),'LEFT'),('ALIGN',(1,0),(1,1),'CENTER'),('SPAN', (0,0), (0,1))]
+    table1.setStyle(TableStyle(table1_style))
+    elements.append(table1)
+    elements.append(blank) 
 
 def create_Table1():
     # Part 2
@@ -86,8 +118,8 @@ def create_Table1():
                   ['', '','',''],
                   [[P202_1,P202_2], P212_1,[P222_1,P222_2],''],
                   ['', '','',''],]
-    table1=Table(table1_data, [147,147,147,147],15,)
-    table1_style = [('FONTSIZE', (0,0), (-1,-1), 7),
+    table1=Table(table1_data, [147,147,147,147],15)
+    table1_style = [('FONTSIZE', (0,0), (-1,-1), 4),
                     ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                     ('INNERGRID', (1,0), (2,3), 0.25, colors.black),
                     ('BACKGROUND', (0, 0), (-1, -1), colors.aliceblue),
@@ -107,30 +139,32 @@ def create_Table1_CSV(data):
     blank = Paragraph("", style["ParagraphLabel"])
     P200_1 = Paragraph("Payment for", style["ParagraphNormal"])
     P200_2 = Paragraph("Kỳ tính lương tháng", style["ParagraphNormal"])
-    P210_1 = Paragraph("01/2021", style["ParagraphNormalRight"])
+    P210_1 = Paragraph(data['Payment_for'], style["ParagraphBigBoldRight"])
     P202_1 = Paragraph("Exchange rate", style["ParagraphNormal"])
     P202_2 = Paragraph("Tỉ giá", style["ParagraphNormal"])
-    P212_1 = Paragraph("24,494,00", style["ParagraphNormalRight"])
+    P212_1 = Paragraph(data['Exchange_rate'], style["ParagraphNormalRight"])
     P222_1 = Paragraph("VND/USD (Vietcombank exchange rate by 25th of the month)", style["ParagraphNormal"])
     P222_2 = Paragraph("VND/USD (tỉ giá ngân hàng Vietcombank vào ngày 25 hằng tháng)", style["ParagraphNormal"])
     
 
-    table1_data= [[[P200_1,P200_2], data['Payment_for'],'',''],
+    table1_data= [[[P200_1,P200_2], P210_1,'',''],
                   ['', '','',''],
-                  [[P202_1,P202_2], data['Exchange_rate'],[P222_1,P222_2],''],
-                  ['', '','',''],]
-    table1=Table(table1_data, [147,147,147,147],15)
-    table1_style = [('FONTSIZE', (0,0), (-1,-1), 7),
+                  [[P202_1,P202_2], P212_1,[P222_1,P222_2],''],
+                  ['', '','','']]
+    
+    table1=Table(table1_data, [147,147,147,147],7)
+
+    table1_style = [('FONTSIZE', (0,0), (-1,-1), 4),
                     ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                     ('INNERGRID', (1,0), (2,3), 0.25, colors.black),
-                    ('BACKGROUND', (0, 0), (-1, -1), colors.aliceblue),
+                    ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey),
                     ('SPAN', (0,0), (0,1)),('SPAN', (0,2), (0,3)),
                     ('SPAN', (1,0), (1,1)),('SPAN', (2,0), (2,1)),
                     ('SPAN', (1,2), (1,3)),('SPAN', (2,2), (3,3)),
                     ('ALIGN',(1,0),(1,1),'RIGHT'),
                     ('ALIGN',(1,2),(1,3),'RIGHT'),
-                    ('LINEABOVE',(0,2),(3,2),1,colors.gray),
-                    ]
+                    ('LINEABOVE',(0,2),(3,2),1,colors.gray)]
+    
     table1.setStyle(TableStyle(table1_style))
     elements.append(table1)
 
@@ -203,7 +237,7 @@ def create_DoubleTables():
                    ('BACKGROUND', (0, 0), (2, 7), colors.aliceblue),
                    ('ALIGN',(3,0),(4,3),'CENTER'),
                    ('ALIGN',(3,4),(4,7),'RIGHT'),
-                   ('FONTSIZE', (0,0), (-1,-1), 7),
+                   ('FONTSIZE', (0,0), (-1,-1), 4),
                    ]))
    
 
@@ -214,7 +248,7 @@ def create_DoubleTables():
         TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                     ('BOX', (0,0), (-1,-1), 0.25, colors.black),
                     ('BACKGROUND', (0, 0), (1, 0), colors.aliceblue),
-                    ('FONTSIZE', (0,0), (-1,-1), 7),
+                    ('FONTSIZE', (0,0), (-1,-1), 4),
                     ('BACKGROUND', (0, 4), (1, 4), colors.aliceblue),
                     ('ALIGN',(1,0),(1,0),'CENTER'),
                     ('ALIGN',(1,4),(1,4),'CENTER'),
@@ -231,33 +265,50 @@ def create_DoubleTables():
 
 def create_DoubleTables_CSV(data):
     # Part 3
-    P300_1 = Paragraph("Employee Code", style["ParagraphNormal"])
-    P300_2 = Paragraph("Mã số nhân viên", style["ParagraphNormal"])
-    P310_1 = Paragraph("Employee Name", style["ParagraphNormal"])
-    P310_2 = Paragraph("Họ và tên", style["ParagraphNormal"])
-    P320_1 = Paragraph("Disciplines", style["ParagraphNormal"])
-    P320_2 = Paragraph("Bộ phận", style["ParagraphNormal"])
-    P330_1 = Paragraph("Position", style["ParagraphNormal"])
-    P330_2 = Paragraph("Vị trí", style["ParagraphNormal"])
-    P340_1 = Paragraph("Basic salary", style["ParagraphNormal"])
-    P340_2 = Paragraph("Tiền lương cơ bản", style["ParagraphNormal"])
-    P350_1 = Paragraph("Incentive bonus", style["ParagraphNormal"])
-    P350_2 = Paragraph("Tiền thưởng", style["ParagraphNormal"])
-    P360_1 = Paragraph("Total gross", style["ParagraphNormal"])
-    P360_2 = Paragraph("Tổng thu nhập trước thuế", style["ParagraphNormal"])
-    P370_1 = Paragraph("Number of dependents", style["ParagraphNormal"])
-    P370_2 = Paragraph("Số người phụ thuộc", style["ParagraphNormal"])
+    # Col 1, format(P3_Row_Col_Number [1: Left, 2: Right])
+
+    P300_1 = Paragraph("Employee Code", style["ParagraphHeaderBoldLeft"])
+    P300_2 = Paragraph("Mã số nhân viên", style["ParagraphHeaderBoldLeft"])
+    P310_1 = Paragraph("Employee Name", style["ParagraphHeaderBoldLeft"])
+    P310_2 = Paragraph("Họ và tên", style["ParagraphHeaderBoldLeft"])
+    P320_1 = Paragraph("Disciplines", style["ParagraphHeaderBoldLeft"])
+    P320_2 = Paragraph("Bộ phận", style["ParagraphHeaderBoldLeft"])
+    P330_1 = Paragraph("Position", style["ParagraphHeaderBoldLeft"])
+    P330_2 = Paragraph("Vị trí", style["ParagraphHeaderBoldLeft"])
+    P340_1 = Paragraph("Basic salary", style["ParagraphHeaderBoldLeft"])
+    P340_2 = Paragraph("Tiền lương cơ bản", style["ParagraphHeaderBoldLeft"])
+    P350_1 = Paragraph("Incentive bonus", style["ParagraphHeaderBoldLeft"])
+    P350_2 = Paragraph("Tiền thưởng", style["ParagraphHeaderBoldLeft"])
+    P360_1 = Paragraph("Total gross", style["ParagraphHeaderBoldLeft"])
+    P360_2 = Paragraph("Tổng thu nhập trước thuế", style["ParagraphHeaderBoldLeft"])
+    P370_1 = Paragraph("Number of dependents", style["ParagraphHeaderBoldLeft"])
+    P370_2 = Paragraph("Số người phụ thuộc", style["ParagraphHeaderBoldLeft"])
     
-    P300_3 = Paragraph("ACTUAL WORKING DAY", style["ParagraphNormal"])
-    P300_4 = Paragraph("Ngày công trong tháng", style["ParagraphNormal"])
+    # Col 2, format(P3_Row_Col_Number [1: Left, 2: Right])
+    P301_1 = Paragraph(data['Employee_Code'], style["ParagraphNormalCenter"])
+    P311_1 = Paragraph(data['Employee_Name'], style["ParagraphBoldCenter"])
+    P321_1 = Paragraph(data['Disciplines'], style["ParagraphNormalCenter"])
+    P331_1 = Paragraph(data['Position'], style["ParagraphNormalCenter"])
+    P341_1 = Paragraph(data['Basic_salary_1'], style["ParagraphNormalCenter"])
+    P341_2 = Paragraph(data['Basic_salary_2'], style["ParagraphNormalCenter"])
+    P351_1 = Paragraph(data['Incentive_bonus_1'], style["ParagraphNormalCenter"])
+    P351_2 = Paragraph(data['Incentive_bonus_2'], style["ParagraphNormalCenter"])
+    P361_1 = Paragraph(data['Total_gross_1'], style["ParagraphNormalCenter"])
+    P361_2 = Paragraph(data['Total_gross_2'], style["ParagraphNormalCenter"])
+    P371_1 = Paragraph(data['Number_of_dependents'], style["ParagraphNormalCenter"])
+
+
+    # Col 1, table2
+    P300_3 = Paragraph("ACTUAL WORKING DAY", style["ParagraphHeaderBoldLeft"])
+    P300_4 = Paragraph("Ngày công trong tháng", style["ParagraphHeaderBoldLeft"])
     P310_3 = Paragraph("Standard working days in month", style["ParagraphNormal"])
     P310_4 = Paragraph("Ngày công tiêu chuẩn trong tháng", style["ParagraphNormal"])
     P320_3 = Paragraph("Remaining AL(s) & OIL for final payment", style["ParagraphNormal"])
     P320_4 = Paragraph("Phép năm còn lại", style["ParagraphNormal"])
     P330_3 = Paragraph("Total paid days", style["ParagraphNormal"])
     P330_4 = Paragraph("Tổng số ngày tính lương", style["ParagraphNormal"])
-    P340_3 = Paragraph("OVERTIME RECORD", style["ParagraphNormal"])
-    P340_4 = Paragraph("Số giờ tăng ca", style["ParagraphNormal"])
+    P340_3 = Paragraph("OVERTIME RECORD", style["ParagraphHeaderBoldLeft"])
+    P340_4 = Paragraph("Số giờ tăng ca", style["ParagraphHeaderBoldLeft"])
     P350_3 = Paragraph("Overtime Hour on Weekdays", style["ParagraphNormal"])
     P350_4 = Paragraph("Số giờ tăng ca ngày thường", style["ParagraphNormal"])
     P360_3 = Paragraph("Overtime Hours on Weekend", style["ParagraphNormal"])
@@ -265,25 +316,40 @@ def create_DoubleTables_CSV(data):
     P370_3 = Paragraph("Overtime Hours on Holidays", style["ParagraphNormal"])
     P370_4 = Paragraph("Số giờ tăng ca ngày lễ", style["ParagraphNormal"])
 
-    part3_data1= [[[P300_1,P300_2], '', '', data['Employee_Code'], ''],
-                  [[P310_1,P310_2], '', '', data['Employee_Name'], ''],
-                  [[P320_1,P320_2], '', '', data['Disciplines'], ''],
-                  [[P330_1,P330_2], '', '', data['Position'], ''],
-                  [[P340_1,P340_2], '', '', data['Basic_salary_1'], data['Basic_salary_2']],
-                  [[P350_1,P350_2], '', '', data['Incentive_bonus_1'], data['Incentive_bonus_2']],
-                  [[P360_1,P360_2], '', '', data['Total_gross_1'], data['Total_gross_2']],
-                  [[P370_1,P370_2], '', '', data['Number_of_dependents'], '']]
+    # Col 2, format(P3_Row_Col_Number [1: Left, 2: Right]) table 2
+    
+    P301_4 = Paragraph('DAYS', style["ParagraphHeaderBoldCenter"])
+    P311_4 = Paragraph(data['working_days'], style["ParagraphNormalRight"])
+    P321_4 = Paragraph(data['Remaining_AL'], style["ParagraphNormalRight"])
+    P331_4 = Paragraph(data['Total_paid_days'], style["ParagraphNormalRight"])
+    P341_4 = Paragraph('HOURS', style["ParagraphHeaderBoldCenter"])
+    P351_4 = Paragraph(data['OT_on_Weekdays'], style["ParagraphNormalRight"])
+    P361_4 = Paragraph(data['OT_on_Weekend'], style["ParagraphNormalRight"])
+    P371_4 = Paragraph(data['OT_on_Holidays'], style["ParagraphNormalRight"])
 
-    part3_data2= [[[P300_3,P300_4], 'DAYS'],
-                  [[P310_3,P310_4], data['working_days']],
-                  [[P320_3,P320_4], data['Remaining_AL']],
-                  [[P330_3,P330_4], data['Total_paid_days']],
-                  [[P340_3,P340_4], 'HOURS'],
-                  [[P350_3,P350_4], data['OT_on_Weekdays']],
-                  [[P360_3,P360_4], data['OT_on_Weekend']],
-                  [[P370_3,P370_4], data['OT_on_Holidays']]]
+    # Col 4
+
+    part3_data1= [[[P300_1,P300_2], '', '', P301_1, ''],
+                  [[P310_1,P310_2], '', '', P311_1, ''],
+                  [[P320_1,P320_2], '', '', P321_1, ''],
+                  [[P330_1,P330_2], '', '', P331_1, ''],
+                  [[P340_1,P340_2], '', '', P341_1, P341_2],
+                  [[P350_1,P350_2], '', '', P351_1, P351_2],
+                  [[P360_1,P360_2], '', '', P361_1, P361_2],
+                  [[P370_1,P370_2], '', '', P371_1, '']]
+
+    part3_data2= [[[P300_3,P300_4], P301_4],
+                  [[P310_3,P310_4], P311_4],
+                  [[P320_3,P320_4], P321_4],
+                  [[P330_3,P330_4], P331_4],
+                  [[P340_3,P340_4], P341_4],
+                  [[P350_3,P350_4], P351_4],
+                  [[P360_3,P360_4], P361_4],
+                  [[P370_3,P370_4], P371_4]]
+    
     # Size Table, Alignment
-    part3_t1=Table(part3_data1,[58,58,58,58,58], 8*[0.4*inch],hAlign='LEFT')
+
+    part3_t1=Table(part3_data1,[58,58,58,58,58], 14,hAlign='LEFT')
 
     part3_t1.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                    ('SPAN', (0,0), (2,0)),('SPAN', (3,0), (4,0)),
@@ -295,22 +361,22 @@ def create_DoubleTables_CSV(data):
                    ('SPAN', (0,6), (2,6)),
                    ('SPAN', (0,7), (2,7)),('SPAN', (3,7), (4,7)),
                    ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                   ('BACKGROUND', (0, 0), (2, 7), colors.aliceblue),
+                   ('BACKGROUND', (0, 0), (2, 7), colors.gray),
+                   ('TEXTCOLOR',(0,0),(2,7),colors.white),
                    ('ALIGN',(3,0),(4,3),'CENTER'),
                    ('ALIGN',(3,4),(4,7),'RIGHT'),
-                   ('FONTSIZE', (0,0), (-1,-1), 7),
+                   ('FONTSIZE', (0,0), (-1,-1), 4),
                    ]))
    
-
-   
-    part3_t2=Table(part3_data2,[145,145], 8*[0.4*inch],hAlign='RIGHT')
+    part3_t2=Table(part3_data2,[145,145], 14,hAlign='RIGHT')
     
     part3_t2.setStyle(
         TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                     ('BOX', (0,0), (-1,-1), 0.25, colors.black),
-                    ('BACKGROUND', (0, 0), (1, 0), colors.aliceblue),
-                    ('FONTSIZE', (0,0), (-1,-1), 7),
-                    ('BACKGROUND', (0, 4), (1, 4), colors.aliceblue),
+                    ('FONTSIZE', (0,0), (-1,-1), 4),
+                    ('BACKGROUND', (0, 0), (1, 0), colors.gray),
+                    ('BACKGROUND', (0, 4), (1, 4), colors.gray),
+                    ('TEXTCOLOR',(0,0),(0,-1),colors.whitesmoke),
                     ('ALIGN',(1,0),(1,0),'CENTER'),
                     ('ALIGN',(1,4),(1,4),'CENTER'),
                     ('ALIGN',(1,1),(1,3),'RIGHT'),
@@ -322,18 +388,17 @@ def create_DoubleTables_CSV(data):
     
     elements.append(blank)
     elements.append(part3_temp)
-    elements.append(PageBreak())
 
 def create_CurrencyTable():
     # Part 4
-    P420_1 = Paragraph("""<para align=center spaceb=3><b>CURRENCY <font color=red>(USD)</font></b></para>""", style["Paragraph4Normal"])
-    P420_2 = Paragraph("Đơn vị tiền tệ (USD)", style["Paragraph4Normal"])
-    P430_1 = Paragraph("CURRENCY (VND)", style["Paragraph4Normal"])
-    P430_2 = Paragraph("Đơn vị tiền tệ (VND)", style["Paragraph4Normal"])
-    P450_1 = Paragraph("CURRENCY (USD)", style["Paragraph4Normal"])
-    P450_2 = Paragraph("Đơn vị tiền tệ (USD)", style["Paragraph4Normal"])
-    P460_1 = Paragraph("CURRENCY (VND)", style["Paragraph4Normal"])
-    P460_2 = Paragraph("Đơn vị tiền tệ (VND)", style["Paragraph4Normal"])
+    P420_1 = Paragraph("""CURRENCY (USD)""", style["ParagraphHeaderBoldCenter"])
+    P420_2 = Paragraph("Đơn vị tiền tệ (USD)", style["ParagraphHeaderBoldCenter"])
+    P430_1 = Paragraph("CURRENCY (VND)", style["ParagraphHeaderBoldCenter"])
+    P430_2 = Paragraph("Đơn vị tiền tệ (VND)", style["ParagraphHeaderBoldCenter"])
+    P450_1 = Paragraph("CURRENCY (USD)", style["ParagraphHeaderBoldCenter"])
+    P450_2 = Paragraph("Đơn vị tiền tệ (USD)", style["ParagraphHeaderBoldCenter"])
+    P460_1 = Paragraph("CURRENCY (VND)", style["ParagraphHeaderBoldCenter"])
+    P460_2 = Paragraph("Đơn vị tiền tệ (VND)", style["ParagraphHeaderBoldCenter"])
 
     P411_1 = Paragraph("Actual basic salary", style["Paragraph4Normal"])
     P411_2 = Paragraph("Tiền lương cơ bản thực tế trong tháng", style["Paragraph4Normal"])
@@ -442,20 +507,20 @@ def create_CurrencyTable():
                     ('SPAN', (0,18), (0,19)),('SPAN', (1,18), (5,19)),('SPAN', (6,18), (6,19)),('SPAN', (7,18), (7,19)),
                     ('SPAN', (0,20), (0,21)),('SPAN', (1,20), (5,21)),('SPAN', (6,20), (6,21)),('SPAN', (7,20), (7,21)),
                     ('SPAN', (5,11), (5,15)),('SPAN', (6,11), (7,15)),
-                    ('FONTSIZE', (0,0), (-1,-1), 6),
+                    ('FONTSIZE', (0,0), (-1,-1), 4),
                     ]))
     elements.append(part4_t1)
 
 def create_CurrencyTable_CSV(data):
     # Part 4
-    P420_1 = Paragraph("""<para align=center spaceb=3><b>CURRENCY <font color=red>(USD)</font></b></para>""", style["Paragraph4Normal"])
-    P420_2 = Paragraph("Đơn vị tiền tệ (USD)", style["Paragraph4Normal"])
-    P430_1 = Paragraph("CURRENCY (VND)", style["Paragraph4Normal"])
-    P430_2 = Paragraph("Đơn vị tiền tệ (VND)", style["Paragraph4Normal"])
-    P450_1 = Paragraph("CURRENCY (USD)", style["Paragraph4Normal"])
-    P450_2 = Paragraph("Đơn vị tiền tệ (USD)", style["Paragraph4Normal"])
-    P460_1 = Paragraph("CURRENCY (VND)", style["Paragraph4Normal"])
-    P460_2 = Paragraph("Đơn vị tiền tệ (VND)", style["Paragraph4Normal"])
+    P420_1 = Paragraph("""CURRENCY (USD)""", style["ParagraphHeaderBoldCenter"])
+    P420_2 = Paragraph("Đơn vị tiền tệ (USD)", style["ParagraphHeaderBoldCenter"])
+    P430_1 = Paragraph("CURRENCY (VND)", style["ParagraphHeaderBoldCenter"])
+    P430_2 = Paragraph("Đơn vị tiền tệ (VND)", style["ParagraphHeaderBoldCenter"])
+    P450_1 = Paragraph("CURRENCY (USD)", style["ParagraphHeaderBoldCenter"])
+    P450_2 = Paragraph("Đơn vị tiền tệ (USD)", style["ParagraphHeaderBoldCenter"])
+    P460_1 = Paragraph("CURRENCY (VND)", style["ParagraphHeaderBoldCenter"])
+    P460_2 = Paragraph("Đơn vị tiền tệ (VND)", style["ParagraphHeaderBoldCenter"])
 
     P411_1 = Paragraph("Actual basic salary", style["Paragraph4Normal"])
     P411_2 = Paragraph("Tiền lương cơ bản thực tế trong tháng", style["Paragraph4Normal"])
@@ -488,14 +553,14 @@ def create_CurrencyTable_CSV(data):
     P4114_2 = Paragraph("Các khoản thu nhập chịu thuế khác", style["Paragraph4Normal"])
     P4115_1 = Paragraph("Benefit-in-kind (for PIT only)", style["Paragraph4Normal"])
     P4115_2 = Paragraph("Các khoản thu nhập chịu thuế ngoài bảng lương", style["Paragraph4Normal"])
-    P4116_1 = Paragraph("NET PAY", style["ParagraphNormal9"])
-    P4116_2 = Paragraph("Thực nhận", style["ParagraphNormalCenter"])
-    P4116_3 = Paragraph("[25] = [1]+[2]+[3]+[4]+[5]+[6]+[7]+[8]+[9]+[10]+[11]+[12]+[13]-[15]-[16]-[17]-[18]-[19]-[20]-[21]+[22]+[23]", style["ParagraphNormalCenter"])
-    P4118_1 = Paragraph("PAYMENT OUT OF PAYROLL PERIOD", style["ParagraphNormal9"])
-    P4118_2 = Paragraph("Thanh toán ngoài kỳ lương", style["ParagraphNormalCenter"])
-    P4120_1 = Paragraph("BANK TRANSFER", style["ParagraphNormal9"])
-    P4120_2 = Paragraph("Chuyển khoản", style["ParagraphNormalCenter"])
-    P4120_3 = Paragraph("[27] = [25]-[26]", style["ParagraphNormalCenter"])
+    P4116_1 = Paragraph("NET PAY", style["ParagraphHeaderBigCenter"])
+    P4116_2 = Paragraph("Thực nhận", style["ParagraphHeaderBigCenter"])
+    P4116_3 = Paragraph("[25] = [1]+[2]+[3]+[4]+[5]+[6]+[7]+[8]+[9]+[10]+[11]+[12]+[13]-[15]-[16]-[17]-[18]-[19]-[20]-[21]+[22]+[23]", style["ParagraphHeaderCenter"])
+    P4118_1 = Paragraph("PAYMENT OUT OF PAYROLL PERIOD", style["ParagraphHeaderBigCenter"])
+    P4118_2 = Paragraph("Thanh toán ngoài kỳ lương", style["ParagraphHeaderBigCenter"])
+    P4120_1 = Paragraph("BANK TRANSFER", style["ParagraphHeaderBigCenter"])
+    P4120_2 = Paragraph("Chuyển khoản", style["ParagraphHeaderBigCenter"])
+    P4120_3 = Paragraph("[27] = [25]-[26]", style["ParagraphHeaderCenter"])
 
 
     P441_1 = Paragraph("Mandatory insurance deduction (9.5%)", style["Paragraph4Normal"])
@@ -521,7 +586,17 @@ def create_CurrencyTable_CSV(data):
     P4410_2 = Paragraph("LTI and interest up to this quarter", style["Paragraph4Normal"])
     P4411_1 = Paragraph("Remarks for Incomes/Deductions in payroll", style["Paragraph4Normal"])
     P4411_2 = Paragraph("Ghi chú cho các khoản thu nhập/khoản trừ lương", style["Paragraph4Normal"])
-    P4511_1 = Paragraph("[6] Other Bonus VND200,000", style["Paragraph4Normal"])
+    P4511_1 = Paragraph("[6] Other Bonus VND" + data['Other_Bonus_2'], style["Paragraph4Normal"])
+
+    P4016_1 = Paragraph("<para>[25]</para>", style["ParagraphHeaderBigCenter"])
+    P4018_1 = Paragraph("<para>[26]</para>", style["ParagraphHeaderBigCenter"])
+    P4020_1 = Paragraph("<para>[27]</para>", style["ParagraphHeaderBigCenter"])
+    P4616_1 = Paragraph("<para><font color=yellow>" + data['NET_PAY_1']+ "</font></para>", style["ParagraphHeaderBigCenter"])
+    P4616_2 = Paragraph("<para><font color=yellow>" + data['NET_PAY_2']+ "</font></para>", style["ParagraphHeaderBigCenter"])
+    P4618_1 = Paragraph(data['PAYMENT_OUT_OF_PAYROLL_PERIOD_1'], style["ParagraphHeaderBigCenter"])
+    P4618_2 = Paragraph(data['PAYMENT_OUT_OF_PAYROLL_PERIOD_2'], style["ParagraphHeaderBigCenter"])
+    P4620_1 = Paragraph(data['BANK_TRANSFER_1'], style["ParagraphHeaderBigCenter"])
+    P4620_2 = Paragraph(data['BANK_TRANSFER_2'], style["ParagraphHeaderBigCenter"])
     
 
     part4_data= [['', '', [P420_1,P420_2], [P430_1,P430_2], '','', [P450_1,P450_2], [P460_1,P460_2]],
@@ -540,19 +615,20 @@ def create_CurrencyTable_CSV(data):
                  ['[12]', [P4113_1,P4113_2], data['Parking_Allowance_1'], data['Parking_Allowance_2'], '', '', '',''],
                  ['[13]', [P4114_1,P4114_2], data['Other_taxable_income_1'], data['Other_taxable_income_2'], '', '', '',''],
                  ['[14]', [P4115_1,P4115_2], data['Benefit_in_kind_1'], data['Benefit_in_kind_2'], '', '', '',''],
-                 ['[25]', [P4116_1,P4116_2,P4116_3], '', '', '', '', data['NET_PAY_1'], data['NET_PAY_2']],
+                 [P4016_1 , [P4116_1,P4116_2,P4116_3], '', '', '', '', P4616_1, P4616_2],
                  ['', '', '', '', '', '', '',''],
-                 ['[26]', [P4118_1,P4118_2], '', '', '[18]', '', data['PAYMENT_OUT_OF_PAYROLL_PERIOD_1'], data['PAYMENT_OUT_OF_PAYROLL_PERIOD_2']],
+                 [P4018_1, [P4118_1,P4118_2], '', '', '[18]', '', P4618_1, P4618_2],
                  ['', '', '', '', '', '', '',''],
-                 ['[27]', [P4120_1,P4120_2,P4120_3], '', '', '[18]', '', data['BANK_TRANSFER_1'], data['BANK_TRANSFER_2']],
+                 [P4020_1, [P4120_1,P4120_2,P4120_3], '', '', '[18]', '', P4620_1, P4620_2],
                  ['', '', '', '', '', '', '',''],]
     
-    part4_t1=Table(part4_data, colWidths=[27,150,62,58,27,123,70,70], rowHeights=30)
+    part4_t1=Table(part4_data, colWidths=[27,150,62,58,27,123,70,70], rowHeights=14)
 
     part4_t1.setStyle(
         TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                     ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                    ('BACKGROUND', (0, 0), (21, 0), colors.aliceblue),
+                    ('BACKGROUND', (0, 0), (21, 0), colors.gray),
+                    ('TEXTCOLOR',(0,0),(21,0),colors.whitesmoke),
                     ('BACKGROUND', (0, 16), (7, 17), colors.gray),
                     ('BACKGROUND', (0, 18), (7, 19), colors.lightgrey),
                     ('BACKGROUND', (0, 20), (7, 21), colors.lightgrey),
@@ -562,12 +638,14 @@ def create_CurrencyTable_CSV(data):
                     ('SPAN', (0,20), (0,21)),('SPAN', (1,20), (5,21)),('SPAN', (6,20), (6,21)),('SPAN', (7,20), (7,21)),
                     ('SPAN', (5,11), (5,15)),('SPAN', (6,11), (7,15)),
                     ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                    ('VALIGN',(5,11),(6,11),'TOP'),
                     ('ALIGN',(2,1),(3,2),'RIGHT'),
                     ('ALIGN',(2,4),(3,15),'RIGHT'),
                     ('ALIGN',(6,1),(7,10),'RIGHT'),
                     ('ALIGN',(6,16),(7,21),'RIGHT'),
-                    ('FONTSIZE', (0,0), (-1,-1), 6),
+                    ('FONTSIZE', (0,0), (-1,-1), 4),
                     ]))
+    elements.append(blank)
     elements.append(part4_t1)
 
 def writeToDisk():
@@ -589,8 +667,6 @@ def inputCSV():
         for row in csv_reader:
             # Append each row (as a dictionary) to the list
             data_list.append(row)
-    
-    # Print the list of dictionaries
 
 def main():
 
