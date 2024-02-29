@@ -20,3 +20,10 @@ You can edit filename.csv file before run script:
 ```sh
 python create_report.py
 ```
+
+After that, you can see some pdf file is created with password. Let's see your result
+
+![Image](./Payslip_Template.png)
+
+### Note
+This is a template for your reference. I just get logo from the internet :)
